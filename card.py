@@ -13,31 +13,24 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
-import os.path
 
 from sprites import Sprite
 
+
 def load_image(file, w, h):
+    """ convert from file to pixbuf at size w, h """
     return gtk.gdk.pixbuf_new_from_file_at_size(file, int(w), int(h))
 
-#
-# class for defining individual cards
-#
+
 class Card:
-    def __init__(self,tw,c,i,x,y):
+    """ class for defining individual cards """
+
+    def __init__(self, tw, c, x, y):
+        """ Load a card from a precomputed svg """
         self.images = []
         file = "%s/card-%d.svg" % (tw.path, c)
-        self.images.append(load_image(file, tw.card_dim*tw.scale,
-                                                 tw.card_dim*tw.scale))
+        self.images.append(load_image(file, tw.card_dim * tw.scale,
+                                                 tw.card_dim * tw.scale))
         # create sprite from svg file
         self.spr = Sprite(tw.sprites, x, y, self.images[0])
-        self.spr.set_label(i)
         self.spr.draw()
-
-    def reset_image(self, tw, i):
-        return
-
-
-
-

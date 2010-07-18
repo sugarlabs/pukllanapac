@@ -35,18 +35,18 @@ import locale
 import os.path
 
 from sprites import *
-import window
+from window import Game
 
 SERVICE = 'org.sugarlabs.PukllanapacActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/PukllanapacActivity'
 
-#
-# Sugar activity
-#
+
 class PukllanapacActivity(activity.Activity):
+    """ Sliding puzzle game """
 
     def __init__(self, handle):
+        """ Initialize the toolbars and the game board """
         super(PukllanapacActivity,self).__init__(handle)
 
         try:
@@ -99,28 +99,35 @@ class PukllanapacActivity(activity.Activity):
         self.show_all()
 
         # Initialize the canvas
-        self.tw = window.new_window(canvas, \
-                                    os.path.join(activity.get_bundle_path(), \
-                                                 'images'), \
-                                    self)
+        self.tw = Game(canvas, os.path.join(activity.get_bundle_path(),
+                                            'images'), self)
 
-        # Read the mode from the Journal
-        #
+        # Restore game state from Journal or start new game
+        try:  # Try reading restored settings from the Journal.
+            self._play_level = int(self.metadata['play_level'])
+            grid = []
+            for i in range(24):
+                grid.append(int(self.metadata['card'+str(i)]))
+            self._play_level = int(self.metadata['play_level'])
+            print "restoring: " + str(grid)
+            self.tw.grid.set_grid(grid)
+        except KeyError:
+            pass
         self.tw.grid.show_all()
 
-
-    """
-    Write the grid status to the Journal
-    """
     def write_file(self, file_path):
-        pass
+        """ Write the grid status to the Journal """
+        self.metadata['play_level'] = '2'
+        print "saving " + str(self.tw.grid.grid)
+        for i in range(24):
+            self.metadata['card'+str(i)] = str(self.tw.grid.grid[i])
 
-#
-# Project toolbar for pre-0.86 toolbars
-#
+
 class ProjectToolbar(gtk.Toolbar):
+    """ Project toolbar for pre-0.86 toolbars """
 
     def __init__(self, pc):
+        """ Initialize a project toolbar """
         gtk.Toolbar.__init__(self)
         self.activity = pc
 
