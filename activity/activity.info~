@@ -1,0 +1,8 @@
+[Activity]
+name = Pucllanapac
+activity_version = 1
+license = GPLv3
+bundle_id = org.sugarlabs.PucllanapacActivity
+exec = sugar-activity PucllanapacActivity.PucllanapacActivity
+icon = activity-pucllanapac
+show_launcher = yes
