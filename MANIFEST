@@ -34,8 +34,8 @@ images/card-21.svg
 images/card-6.svg
 images/card-18.svg
 po/Pucllanapac.pot
-icons/3x3on.svg
-icons/3x3off.svg
+
+
 PukllanapacActivity.py
 locale/es/activity.linfo
 locale/es/LC_MESSAGES/org.sugarlabs.PukllanapacActivity.mo
