@@ -13,7 +13,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-
+import gobject
 from math import sqrt
 
 from gettext import gettext as _
@@ -28,7 +28,9 @@ from grid import Grid
 from sprites import Sprites
 from constants import C, MASKS, CARD_DIM
 
-LEVEL_BOUNDS = [[2, 1, 3, 2], [2, 1, 2, 3], [1, 2, 1, 4]]
+LEVEL_BOUNDS = [[[1, 2], [0, 1], [2, 3], [1, 2]],
+                [[1, 2], [0, 1], [1, 4], [0, 3]], 
+                [[0, 3], [-1, 2], [1, 5], [-1, 4]]]
 
 class Game():
     """ The game play -- called from within Sugar or GNOME """
@@ -109,7 +111,7 @@ class Game():
         self.release = None
         if self.test() == True:
             if self.level < 2:
-                self.activity.level_cb(None)
+                gobject.timeout_add(3000, self.activity.level_cb, None)
         return True
 
     def _expose_cb(self, win, event):
@@ -127,42 +129,35 @@ class Game():
 
     def test(self):
         """ Test the grid to see if the level is solved """
-        for i in self.grid.grid:
+        for i in range(24):
             if i not in MASKS[self.level]:
-                print i
                 if not self.test_card(i):
                     return False
         return True
 
     def test_card(self, i):
-        """ Test a card with its neighbors """
+        """ Test a card with its neighbors; tests are bounded by the level """
         row = int(i/6)
         col = i%6
-        if row > self.bounds[0]:
-            print "up testing card %d with %d" % (i, i-6)
-            if C[i][0] != C[i - 6][1]:
+        if row > self.bounds[0][0] and row <= self.bounds[0][1]:
+            if C[self.grid.grid[i]][0] != C[self.grid.grid[i - 6]][1]:
                 return False
-            if C[i][3] != C[i - 6][2]:
+            if C[self.grid.grid[i]][3] != C[self.grid.grid[i - 6]][2]:
                 return False
-        if row < self.bounds[1]:
-            print "down testing card %d with %d" % (i, i+6)
-            if C[i][1] != C[i + 6][0]:
+        if row > self.bounds[1][0] and row <= self.bounds[1][1]:
+            if C[self.grid.grid[i]][1] != C[self.grid.grid[i + 6]][0]:
                 return False
-            if C[i][2] != C[i + 6][3]:
+            if C[self.grid.grid[i]][2] != C[self.grid.grid[i + 6]][3]:
                 return False
-        if col > self.bounds[2]:
-            print "left testing card %d with %d" % (i, i-1)
-            if C[i][3] != C[i - 1][0]:
+        if col > self.bounds[2][0] and col <= self.bounds[2][1]:
+            if C[self.grid.grid[i]][3] != C[self.grid.grid[i - 1]][0]:
                 return False
-            if C[i][2] != C[i - 1][1]:
+            if C[self.grid.grid[i]][2] != C[self.grid.grid[i - 1]][1]:
                 return False
-        if col < self.bounds[3]:
-            print "right testing card %d with %d" % (i, i+1)
-            if C[i][0] != C[i + 1][3]:
-                print C[i][0], C[i + 1][3]
+        if col > self.bounds[3][0] and col <= self.bounds[3][1]:
+            if C[self.grid.grid[i]][0] != C[self.grid.grid[i + 1]][3]:
                 return False
-            if C[i][1] != C[i + 1][2]:
-                print C[i][0], C[i + 1][3]
+            if C[self.grid.grid[i]][1] != C[self.grid.grid[i + 1]][2]:
                 return False
         return True
 
