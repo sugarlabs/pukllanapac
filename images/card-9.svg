@@ -17,18 +17,18 @@
       <path
          d="m 342.85714,826.64789 a 97.14286,88.571426 0 1 1 -194.28572,0 97.14286,88.571426 0 1 1 194.28572,0 z"
          transform="matrix(0.76176468,0,0,0.83548389,11.823541,162.71119)"
-         style="fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+         style="fill:#ffff00;fill-opacity:1;fill-rule:nonzero;stroke:none" />
       <path
          d="m 342.85714,826.64789 a 97.14286,88.571426 0 1 1 -194.28572,0 97.14286,88.571426 0 1 1 194.28572,0 z"
          transform="matrix(0.76176468,0,0,0.83548389,11.823541,362.71119)"
-         style="fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+         style="fill:#ffff00;fill-opacity:1;fill-rule:nonzero;stroke:none" />
       <path
          d="m 342.85714,826.64789 a 97.14286,88.571426 0 1 1 -194.28572,0 97.14286,88.571426 0 1 1 194.28572,0 z"
          transform="matrix(0.76176468,0,0,0.83548389,-188.17646,362.71119)"
-         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+         style="fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
       <path
          d="m 342.85714,826.64789 a 97.14286,88.571426 0 1 1 -194.28572,0 97.14286,88.571426 0 1 1 194.28572,0 z"
          transform="matrix(0.76176468,0,0,0.83548389,-188.17646,162.71119)"
-         style="fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+         style="fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
   </g>
 </svg>
