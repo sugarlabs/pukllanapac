@@ -23,8 +23,9 @@ try: # 0.86+ toolbar widgets
     from sugar.activity.widgets import StopButton
     from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
+    _new_sugar_system = True
 except ImportError:
-    pass
+    _new_sugar_system = False
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -40,6 +41,48 @@ from window import Game
 SERVICE = 'org.sugarlabs.PukllanapacActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/PukllanapacActivity'
+LEVEL_ICONS = ['level1', 'level2', 'level3']
+
+
+def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,
+                    accelerator=None):
+    """Factory for making toolbar buttons"""
+    my_button = ToolButton(icon_name)
+    my_button.set_tooltip(tooltip)
+    my_button.props.sensitive = True
+    if accelerator is not None:
+        my_button.props.accelerator = accelerator
+    if cb_arg is not None:
+        my_button.connect('clicked', callback, cb_arg)
+    else:
+        my_button.connect('clicked', callback)
+    if hasattr(toolbar, 'insert'):  # the main toolbar
+        toolbar.insert(my_button, -1)
+    else:  # or a secondary toolbar
+        toolbar.props.page.insert(my_button, -1)
+    my_button.show()
+    return my_button
+
+
+def _label_factory(label, toolbar):
+    """ Factory for adding a label to a toolbar """
+    my_label = gtk.Label(label)
+    my_label.set_line_wrap(True)
+    my_label.show()
+    _toolitem = gtk.ToolItem()
+    _toolitem.add(my_label)
+    toolbar.insert(_toolitem, -1)
+    _toolitem.show()
+    return my_label
+
+
+def _separator_factory(toolbar, visible=True, expand=False):
+    """ Factory for adding a separator to a toolbar """
+    _separator = gtk.SeparatorToolItem()
+    _separator.props.draw = visible
+    _separator.set_expand(expand)
+    toolbar.insert(_separator, -1)
+    _separator.show()
 
 
 class PukllanapacActivity(activity.Activity):
@@ -49,46 +92,8 @@ class PukllanapacActivity(activity.Activity):
         """ Initialize the toolbars and the game board """
         super(PukllanapacActivity,self).__init__(handle)
 
-        try:
-            # Use 0.86 toolbar design
-            toolbar_box = ToolbarBox()
-
-            # Buttons added to the Activity toolbar
-            activity_button = ActivityToolbarButton(self)
-            toolbar_box.toolbar.insert(activity_button, 0)
-            activity_button.show()
-
-            # Label for showing status
-            self.results_label = gtk.Label(_("drag to swap"))
-            self.results_label.show()
-            results_toolitem = gtk.ToolItem()
-            results_toolitem.add(self.results_label)
-            toolbar_box.toolbar.insert(results_toolitem,-1)
-
-            separator = gtk.SeparatorToolItem()
-            separator.props.draw = False
-            separator.set_expand(True)
-            separator.show()
-            toolbar_box.toolbar.insert(separator, -1)
-
-            # The ever-present Stop Button
-            stop_button = StopButton(self)
-            stop_button.props.accelerator = '<Ctrl>Q'
-            toolbar_box.toolbar.insert(stop_button, -1)
-            stop_button.show()
-
-            self.set_toolbar_box(toolbar_box)
-            toolbar_box.show()
-
-        except NameError:
-            # Use pre-0.86 toolbar design
-            self.toolbox = activity.ActivityToolbox(self)
-            self.set_toolbox(self.toolbox)
-
-            self.projectToolbar = ProjectToolbar(self)
-            self.toolbox.add_toolbar( _('Project'), self.projectToolbar )
-
-            self.toolbox.show()
+        self._play_level = 0
+        self._setup_toolbars(_new_sugar_system)
 
         # Create a canvas
         canvas = gtk.DrawingArea()
@@ -109,33 +114,66 @@ class PukllanapacActivity(activity.Activity):
             for i in range(24):
                 grid.append(int(self.metadata['card'+str(i)]))
             self._play_level = int(self.metadata['play_level'])
-            print "restoring: " + str(grid)
+            # print "restoring: " + str(grid)
             self.tw.grid.set_grid(grid)
         except KeyError:
             pass
-        self.tw.grid.show_all()
+        print "restoring play level %d " % (self._play_level)
+        self.tw.mask(self._play_level)
 
     def write_file(self, file_path):
         """ Write the grid status to the Journal """
-        self.metadata['play_level'] = '2'
-        print "saving " + str(self.tw.grid.grid)
+        self.metadata['play_level'] = self._play_level
+        # print "saving " + str(self.tw.grid.grid)
         for i in range(24):
             self.metadata['card'+str(i)] = str(self.tw.grid.grid[i])
 
+    def _setup_toolbars(self, new_sugar_system):
+        """ Setup the toolbars.. """
 
-class ProjectToolbar(gtk.Toolbar):
-    """ Project toolbar for pre-0.86 toolbars """
+        if new_sugar_system:
+            toolbox = ToolbarBox()
 
-    def __init__(self, pc):
-        """ Initialize a project toolbar """
-        gtk.Toolbar.__init__(self)
-        self.activity = pc
+            # Activity toolbar
+            activity_button = ActivityToolbarButton(self)
 
-        # Label for showing status
-        self.activity.results_label = gtk.Label(\
-            _("drag to swap"))
-        self.activity.results_label.show()
-        self.activity.results_toolitem = gtk.ToolItem()
-        self.activity.results_toolitem.add(self.activity.results_label)
-        self.insert(self.activity.results_toolitem, -1)
-        self.activity.results_toolitem.show()
+            toolbox.toolbar.insert(activity_button, 0)
+            activity_button.show()
+
+            self.set_toolbar_box(toolbox)
+            toolbox.show()
+            toolbar = toolbox.toolbar
+
+        else:
+            # Use pre-0.86 toolbar design
+            games_toolbar = gtk.Toolbar()
+            toolbox = activity.ActivityToolbox(self)
+            self.set_toolbox(toolbox)
+            toolbox.add_toolbar(_('Game'), games_toolbar)
+            toolbox.show()
+            toolbox.set_current_toolbar(1)
+            toolbar = games_toolbar
+
+        # Add the buttons and labels to the toolbars
+        self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
+                                            _('Set difficulty level.'),
+                                            self.level_cb, toolbar)
+        _separator_factory(toolbar, True, False)
+        self.status_label = _label_factory(_("drag to swap"), toolbar)
+
+        if _new_sugar_system:
+            _separator_factory(toolbox.toolbar, False, True)
+
+            stop_button = StopButton(self)
+            stop_button.props.accelerator = '<Ctrl>q'
+            toolbox.toolbar.insert(stop_button, -1)
+            stop_button.show()
+
+    def level_cb(self, button):
+        """ Cycle between levels """
+        self._play_level += 1
+        if self._play_level == len(LEVEL_ICONS):
+            self._play_level = 0
+        self.level_button.set_icon(LEVEL_ICONS[self._play_level])
+        self.tw.grid.reset()
+        self.tw.mask(self._play_level)

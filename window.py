@@ -26,9 +26,9 @@ except:
 
 from grid import Grid
 from sprites import Sprites
+from constants import C, MASKS, CARD_DIM
 
-CARD_DIM = 200
-
+LEVEL_BOUNDS = [[2, 1, 3, 2], [2, 1, 2, 3], [1, 2, 1, 4]]
 
 class Game():
     """ The game play -- called from within Sugar or GNOME """
@@ -67,6 +67,8 @@ class Game():
 
         # Initialize the grid
         self.grid = Grid(self)
+        self.bounds = LEVEL_BOUNDS[0]
+        self.level = 0
 
         # Start solving the puzzle
         self.press = None
@@ -105,20 +107,9 @@ class Game():
             self.grid.swap(self.press, self.release)
         self.press = None
         self.release = None
-        """
-            if self.test() == True:
-                if self.sugar is True:
-                    self.activity.results_label.set_text(_("You solved the puzzle."))
-                    self.activity.results_label.show()
-                else:
-                    self.win.set_title( _("You solved the puzzle."))
-            else:
-                if self.sugar is True:
-                    self.activity.results_label.set_text(_("Keep trying."))
-                    self.activity.results_label.show()
-                else:
-                    self.win.set_title(_("Keep trying."))
-        """
+        if self.test() == True:
+            if self.level < 2:
+                self.activity.level_cb(None)
         return True
 
     def _expose_cb(self, win, event):
@@ -128,11 +119,56 @@ class Game():
     def _destroy_cb(self, win, event):
         gtk.main_quit()
 
+    def mask(self, level):
+        """ mask out cards not on play level """
+        self.grid.hide_list(MASKS[level])
+        self.bounds = LEVEL_BOUNDS[level]
+        self.level = level
+
+    def test(self):
+        """ Test the grid to see if the level is solved """
+        for i in self.grid.grid:
+            if i not in MASKS[self.level]:
+                print i
+                if not self.test_card(i):
+                    return False
+        return True
+
+    def test_card(self, i):
+        """ Test a card with its neighbors """
+        row = int(i/6)
+        col = i%6
+        if row > self.bounds[0]:
+            print "up testing card %d with %d" % (i, i-6)
+            if C[i][0] != C[i - 6][1]:
+                return False
+            if C[i][3] != C[i - 6][2]:
+                return False
+        if row < self.bounds[1]:
+            print "down testing card %d with %d" % (i, i+6)
+            if C[i][1] != C[i + 6][0]:
+                return False
+            if C[i][2] != C[i + 6][3]:
+                return False
+        if col > self.bounds[2]:
+            print "left testing card %d with %d" % (i, i-1)
+            if C[i][3] != C[i - 1][0]:
+                return False
+            if C[i][2] != C[i - 1][1]:
+                return False
+        if col < self.bounds[3]:
+            print "right testing card %d with %d" % (i, i+1)
+            if C[i][0] != C[i + 1][3]:
+                print C[i][0], C[i + 1][3]
+                return False
+            if C[i][1] != C[i + 1][2]:
+                print C[i][0], C[i + 1][3]
+                return False
+        return True
+
 
 def distance(start, stop):
     """ Measure the length of drag between button press and button release. """
     dx = start[0] - stop[0]
     dy = start[1] - stop[1]
     return sqrt(dx * dx + dy * dy)
-
-

@@ -65,12 +65,14 @@ class Grid:
         for i in list:
             self.card_table[i].spr.hide()
 
-    def reset(self, tw):
+    def reset(self):
         """ Reset everything to initial layout """
         self.show_all()
         self.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                      17, 18, 19, 20, 21, 22, 23]
-        self.test()
+        for i in self.grid:
+            x, y = self.i_to_xy(i)
+            self.card_table[i].spr.move((x, y))
 
     def swap(self, a, b):
         """ swap grid elements and x,y positions of sprites """
@@ -98,7 +100,3 @@ class Grid:
         for i in range(24):
             if self.grid[i] == c:
                 return i
-
-    def test(self):
-        """ TODO: Test all relevant borders, ignoring edges """
-        return False

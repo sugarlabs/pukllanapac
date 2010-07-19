@@ -13,18 +13,11 @@
 # Boston, MA 02111-1307, USA.
 
 import os
+from constants import C
 
 XCOR = ["-188.17646", "11.823541"]
 YCOR = ["162.71119", "362.71119"]
 
-R = "#ff0000"
-Y = "#ffff00"
-B = "#0000ff"
-
-C = [[Y, B, Y, R], [R, Y, Y, R], [R, R, Y, R], [R, R, R, R], [B, B, B, Y], [Y, B, Y, Y],
-     [R, B, R, R], [Y, Y, Y, Y], [Y, Y, R, B], [Y, Y, B, B], [Y, R, Y, Y], [R, R, Y, B],
-     [B, B, B, B], [R, B, B, B], [B, R, B, R], [B, B, R, R], [R, R, B, Y], [B, Y, B, Y],
-     [R, Y, Y, B], [R, B, B, Y], [Y, R, B, R], [R, Y, R, Y], [R, B, Y, B], [Y, B, B, R]]
 
 def _svg_header():
     """ the common header every card shares """
