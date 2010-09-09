@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-18 10:41-0400\n"
+"POT-Creation-Date: 2010-09-09 17:43-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,18 @@ msgstr ""
 msgid "Pukllanapac"
 msgstr ""
 
-#: /home/walter/Desktop/oscar/PukllanapacActivity.py:62
-#: /home/walter/Desktop/oscar/PukllanapacActivity.py:129
-msgid "drag to swap"
+#: /home/walter/Desktop/oscar/PukllanapacActivity.py:162
+msgid "Game"
 msgstr ""
 
-#: /home/walter/Desktop/oscar/PukllanapacActivity.py:89
-msgid "Project"
+#: /home/walter/Desktop/oscar/PukllanapacActivity.py:169
+msgid "Set difficulty level."
+msgstr ""
+
+#: /home/walter/Desktop/oscar/PukllanapacActivity.py:176
+msgid "Select game."
+msgstr ""
+
+#: /home/walter/Desktop/oscar/PukllanapacActivity.py:179
+msgid "drag to swap"
 msgstr ""
