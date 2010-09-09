@@ -120,7 +120,8 @@ class Game():
         self.release = None
         if self.test() == True:
             if self.level < 2:
-                gobject.timeout_add(3000, self.activity.level_cb, None)
+                gobject.timeout_add(3000, self.activity.change_play_level_cb,
+                                    None)
         return True
 
     def _keypress_cb(self, area, event):
@@ -155,16 +156,32 @@ class Game():
         row = int(i/6)
         col = i%6
         if row > self.bounds[0][0] and row <= self.bounds[0][1]:
-            if C[self.grid.grid[i]][0] != C[self.grid.grid[i - 6]][1]:
+            if C[self.grid.grid[i]][rotate_index(0,
+                 self.grid.card_table[self.grid.grid[i]].orientation)] != \
+               C[self.grid.grid[i - 6]][rotate_index(1,
+                 self.grid.card_table[self.grid.grid[i - 6]].orientation)]:
                 return False
-            if C[self.grid.grid[i]][3] != C[self.grid.grid[i - 6]][2]:
+            if C[self.grid.grid[i]][rotate_index(3,
+                 self.grid.card_table[self.grid.grid[i]].orientation)] != \
+               C[self.grid.grid[i - 6]][rotate_index(2,
+                 self.grid.card_table[self.grid.grid[i - 6]].orientation)]:
                 return False
         if col > self.bounds[2][0] and col <= self.bounds[2][1]:
-            if C[self.grid.grid[i]][3] != C[self.grid.grid[i - 1]][0]:
+            if C[self.grid.grid[i]][rotate_index(3,
+                 self.grid.card_table[self.grid.grid[i]].orientation)] != \
+               C[self.grid.grid[i - 1]][rotate_index(0,
+                 self.grid.card_table[self.grid.grid[i - 1]].orientation)]:
                 return False
-            if C[self.grid.grid[i]][2] != C[self.grid.grid[i - 1]][1]:
+            if C[self.grid.grid[i]][rotate_index(2,
+                 self.grid.card_table[self.grid.grid[i]].orientation)] != \
+               C[self.grid.grid[i - 1]][rotate_index(1,
+                 self.grid.card_table[self.grid.grid[i - 1]].orientation)]:
                 return False
         return True
+
+def rotate_index(index, orientation):
+    """ Account for orientation when computing an index """
+    return (index + int(orientation/90)) % 4
 
 def distance(start, stop):
     """ Measure the length of drag between button press and button release. """
