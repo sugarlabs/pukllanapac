@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Python in Emacs -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="103.6" height="117.8">
+  <g     transform="matrix(-1,0,0,-1,838.7,574.0)">
+    <g      transform="translate(129.8,111.4)">
+      <path
+         d="m 607.8,460.4 98.2,-55.0 -65.6,-0.9 -32.7,55.9 z"
+         style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 607.3,460.6 0,-113.5 33.3,56.7 -33.3,56.8 z"
+         style="fill:#00ff00;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 706.9,405.2 -98.7,-58.4 32.3,57.2 66.4,1.2 z"
+         style="fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+</g>
+</svg>
