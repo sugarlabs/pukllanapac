@@ -80,14 +80,11 @@ class Grid:
             return (x - int((self.w - (self.d * 6)) / 2)) / self.d + \
                 ((y - int((self.h - (self.d * 4)) / 2)) / self.d) * 6
 
-    def set_grid(self, newgrid, shape='rectangle'):
+    def restore_grid(self, grid, shape='rectangle'):
         """ Move cards to x, y positions specified in grid """
-        for i, c in enumerate(newgrid):
+        for i, c in enumerate(grid):
             x, y = self.i_to_xy(i, shape)
             self.card_table[c].spr.move((x, y))
-            if shape == 'hexagon':
-                self.card_table[c].set_orientation(
-                    HEX_ORIENTATION[GRID_TO_HEX[c]])
             self.grid[i] = c
 
     def show_all(self):

@@ -108,7 +108,6 @@ class Game():
         # if press and release are the same card (click), then rotate
         if self.press == self.release:
             self.press.set_layer(0)
-                self.grid.grid[self.grid.spr_to_i(self.press)]].orientation, ')'
             self.grid.card_table[self.grid.grid[self.grid.spr_to_i(
                         self.press)]].rotate_ccw()
             if self.mode == 'hexagon': # Rotate a second time
@@ -125,13 +124,8 @@ class Game():
         return True
 
     def _keypress_cb(self, area, event):
-        """ Keypress is used to switch between games  """
+        """ Keypress is used to ...  """
         k = gtk.gdk.keyval_name(event.keyval)
-        u = gtk.gdk.keyval_to_unicode(event.keyval)
-        if k == '1':
-            print 'game 1'
-        elif k == '2':
-            print 'game 2'
 
     def _expose_cb(self, win, event):
         self.sprites.refresh(event)

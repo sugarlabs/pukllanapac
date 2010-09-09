@@ -122,12 +122,10 @@ class PukllanapacActivity(activity.Activity):
             for i in range(24):
                 if 'card' + str(i) in self.metadata:
                     grid.append(int(self.metadata['card' + str(i)]))
-            self.tw.grid.set_grid(grid, self.tw.mode)
+            self.tw.grid.restore_grid(grid, self.tw.mode)
             for i in range(24):
                 if 'rotate' + str(i) in self.metadata:
-                    print "restoring %d to %d" % (i,
-                        int(self.metadata['rotate' + str(i)]))
-                    self.tw.grid.card_table[i].set_orientation(
+                    self.tw.grid.card_table[grid[i]].set_orientation(
                         int(self.metadata['rotate' + str(i)]))
         self.tw.mask(self._play_level)
 
