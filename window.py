@@ -105,11 +105,9 @@ class Game():
             return True
         # take note of card under button release
         self.release = spr
-        # if the same card (click) then rotate
+        # if press and release are the same card (click), then rotate
         if self.press == self.release:
             self.press.set_layer(0)
-            print "rotating card ", self.grid.grid[self.grid.spr_to_i(
-                    self.press)], 'was (', self.grid.card_table[
                 self.grid.grid[self.grid.spr_to_i(self.press)]].orientation, ')'
             self.grid.card_table[self.grid.grid[self.grid.spr_to_i(
                         self.press)]].rotate_ccw()
@@ -118,9 +116,6 @@ class Game():
                             self.press)]].rotate_ccw()
             self.press.set_layer(100)
         else:
-            print "swapping: ", self.grid.grid[self.grid.spr_to_i(
-                        self.press)], self.grid.grid[self.grid.spr_to_i(
-                        self.release)]
             self.grid.swap(self.press, self.release, self.mode)            
         self.press = None
         self.release = None
@@ -153,6 +148,8 @@ class Game():
 
     def test(self):
         """ Test the grid to see if the level is solved """
+        if self.mode != 'rectangle':
+            return False
         for i in range(24):
             if i not in MASKS[self.level]:
                 if not self.test_card(i):
@@ -168,42 +165,11 @@ class Game():
                 return False
             if C[self.grid.grid[i]][3] != C[self.grid.grid[i - 6]][2]:
                 return False
-        '''
-        if row > self.bounds[1][0] and row <= self.bounds[1][1]:
-            if C[self.grid.grid[i]][1] != C[self.grid.grid[i + 6]][0]:
-                return False
-            if C[self.grid.grid[i]][2] != C[self.grid.grid[i + 6]][3]:
-                return False
-        '''
         if col > self.bounds[2][0] and col <= self.bounds[2][1]:
             if C[self.grid.grid[i]][3] != C[self.grid.grid[i - 1]][0]:
                 return False
             if C[self.grid.grid[i]][2] != C[self.grid.grid[i - 1]][1]:
                 return False
-        '''
-        if col > self.bounds[3][0] and col <= self.bounds[3][1]:
-            if C[self.grid.grid[i]][0] != C[self.grid.grid[i + 1]][3]:
-                return False
-            if C[self.grid.grid[i]][1] != C[self.grid.grid[i + 1]][2]:
-                return False
-        '''
-        return True
-
-    def solver(self):
-        """ Permutate until a solution is found (useless since 24! is >>>) """
-        self.grid.reset(self.mode)
-        counter = 0
-        a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-             19, 20, 21, 22, 23]
-        for i in Permutation(a):
-            self.grid.set_grid(i, self.mode)
-            if self.test() is True:
-                return True
-            counter += 1
-            if (counter/10000)*10000 == counter:
-                _logger.debug('%d' % counter)
-                self.activity.status_label.set_text('%d' % (counter))
-        self.activity.status_label.set_text(_("no solution found"))
         return True
 
 def distance(start, stop):
@@ -211,25 +177,3 @@ def distance(start, stop):
     dx = start[0] - stop[0]
     dy = start[1] - stop[1]
     return sqrt(dx * dx + dy * dy)
-
-
-class Permutation:
-    """Permutaion class for checking for all possible matches on the grid """
-
-    def __init__(self, elist):
-        self._data = elist[:]
-        self._sofar = []
-
-    def __iter__(self):
-        return self.next()
-
-    def next(self):
-        for e in self._data:
-            if e not in self._sofar:
-                self._sofar.append(e)
-                if len(self._sofar) == len(self._data):
-                    yield self._sofar[:]
-                else:
-                    for v in self.next():
-                        yield v
-                self._sofar.pop()
