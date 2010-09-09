@@ -107,18 +107,16 @@ class Game():
         self.release = spr
         # if the same card (click) then rotate
         if self.press == self.release:
-            if distance(self.start_drag, [x, y]) > 20:
-                print "rotating card ", self.grid.grid[self.grid.spr_to_i(
-                        self.press)], 'was (', self.grid.card_table[
-                    self.grid.grid[self.grid.spr_to_i(
-                            self.press)]].orientation, ')'
-                self.grid.card_table[self.grid.grid[self.grid.spr_to_i(
+            self.press.set_layer(0)
+            print "rotating card ", self.grid.grid[self.grid.spr_to_i(
+                    self.press)], 'was (', self.grid.card_table[
+                self.grid.grid[self.grid.spr_to_i(self.press)]].orientation, ')'
+            self.grid.card_table[self.grid.grid[self.grid.spr_to_i(
                         self.press)]].rotate_ccw()
-                if self.mode == 'hexagon': # Rotate a second time
-                    self.grid.card_table[self.grid.grid[self.grid.spr_to_i(
-                                self.press)]].rotate_ccw()
-                self.press.set_layer(0)
-                self.press.set_layer(100)
+            if self.mode == 'hexagon': # Rotate a second time
+                self.grid.card_table[self.grid.grid[self.grid.spr_to_i(
+                            self.press)]].rotate_ccw()
+            self.press.set_layer(100)
         else:
             print "swapping: ", self.grid.grid[self.grid.spr_to_i(
                         self.press)], self.grid.grid[self.grid.spr_to_i(
