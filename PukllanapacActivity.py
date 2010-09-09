@@ -17,15 +17,18 @@ import gobject
 
 import sugar
 from sugar.activity import activity
-try: # 0.86+ toolbar widgets
+try:
+    from sugar.graphics.toolbarbox import ToolbarBox
+    _have_toolbox = True
+except ImportError:
+    _have_toolbox = False
+
+if _have_toolbox:
     from sugar.bundle.activitybundle import ActivityBundle
     from sugar.activity.widgets import ActivityToolbarButton
     from sugar.activity.widgets import StopButton
-    from sugar.graphics.toolbarbox import ToolbarBox
     from sugar.graphics.toolbarbox import ToolbarButton
-    _new_sugar_system = True
-except ImportError:
-    _new_sugar_system = False
+
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -42,6 +45,7 @@ SERVICE = 'org.sugarlabs.PukllanapacActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/PukllanapacActivity'
 LEVEL_ICONS = ['level1', 'level2', 'level3']
+GAME_ICONS = ['rectangle', 'hexagon']
 
 
 def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,
@@ -93,7 +97,8 @@ class PukllanapacActivity(activity.Activity):
         super(PukllanapacActivity,self).__init__(handle)
 
         self._play_level = 0
-        self._setup_toolbars(_new_sugar_system)
+        self._play_mode = 0
+        self._setup_toolbars(_have_toolbox)
 
         # Create a canvas
         canvas = gtk.DrawingArea()
@@ -103,35 +108,42 @@ class PukllanapacActivity(activity.Activity):
         canvas.show()
         self.show_all()
 
-        # Initialize the canvas
         self.tw = Game(canvas, os.path.join(activity.get_bundle_path(),
                                             'images'), self)
 
         # Restore game state from Journal or start new game
-        try:  # Try reading restored settings from the Journal.
-            self._play_level = int(self.metadata['play_level'])
+        if 'play_level' in self.metadata:
+            self.change_play_level_cb(play_level=int(
+                    self.metadata['play_level']))
+            if 'play_mode' in self.metadata:
+                self.change_play_mode_cb(play_mode=int(
+                        self.metadata['play_mode']))
             grid = []
             for i in range(24):
-                grid.append(int(self.metadata['card'+str(i)]))
-            self._play_level = int(self.metadata['play_level'])
-            # print "restoring: " + str(grid)
-            self.tw.grid.set_grid(grid)
-        except KeyError:
-            pass
-        print "restoring play level %d " % (self._play_level)
+                if 'card' + str(i) in self.metadata:
+                    grid.append(int(self.metadata['card' + str(i)]))
+            self.tw.grid.set_grid(grid, self.tw.mode)
+            for i in range(24):
+                if 'rotate' + str(i) in self.metadata:
+                    print "restoring %d to %d" % (i,
+                        int(self.metadata['rotate' + str(i)]))
+                    self.tw.grid.card_table[i].set_orientation(
+                        int(self.metadata['rotate' + str(i)]))
         self.tw.mask(self._play_level)
 
     def write_file(self, file_path):
         """ Write the grid status to the Journal """
+        self.metadata['play_mode'] = self._play_mode
         self.metadata['play_level'] = self._play_level
-        # print "saving " + str(self.tw.grid.grid)
         for i in range(24):
-            self.metadata['card'+str(i)] = str(self.tw.grid.grid[i])
+            self.metadata['card' + str(i)] = str(self.tw.grid.grid[i])
+            self.metadata['rotate' + str(i)] = str(
+                self.tw.grid.card_table[self.tw.grid.grid[i]].orientation)
 
-    def _setup_toolbars(self, new_sugar_system):
+    def _setup_toolbars(self, have_toolbox):
         """ Setup the toolbars.. """
 
-        if new_sugar_system:
+        if have_toolbox:
             toolbox = ToolbarBox()
 
             # Activity toolbar
@@ -157,11 +169,18 @@ class PukllanapacActivity(activity.Activity):
         # Add the buttons and labels to the toolbars
         self.level_button = _button_factory(LEVEL_ICONS[self._play_level],
                                             _('Set difficulty level.'),
-                                            self.level_cb, toolbar)
+                                            self.change_play_level_cb, toolbar)
+        mode = self._play_mode
+        mode += 1
+        if mode == len(GAME_ICONS):
+            mode = 0
+        self.game_button = _button_factory(GAME_ICONS[mode],
+                                            _('Select game.'),
+                                            self.change_play_mode_cb, toolbar)
         _separator_factory(toolbar, True, False)
         self.status_label = _label_factory(_("drag to swap"), toolbar)
 
-        if _new_sugar_system:
+        if _have_toolbox:
             _separator_factory(toolbox.toolbar, False, True)
 
             stop_button = StopButton(self)
@@ -169,11 +188,39 @@ class PukllanapacActivity(activity.Activity):
             toolbox.toolbar.insert(stop_button, -1)
             stop_button.show()
 
-    def level_cb(self, button):
+    def change_play_level_cb(self, button=None, play_level=None):
         """ Cycle between levels """
-        self._play_level += 1
-        if self._play_level == len(LEVEL_ICONS):
-            self._play_level = 0
+        if self._play_mode > 0:
+            return
+        if play_level is None:
+            self._play_level += 1
+            if self._play_level == len(LEVEL_ICONS):
+                self._play_level = 0
+        else:
+            self._play_level = play_level
         self.level_button.set_icon(LEVEL_ICONS[self._play_level])
-        self.tw.grid.reset()
+        self.tw.grid.reset(GAME_ICONS[self._play_mode])
         self.tw.mask(self._play_level)
+
+    def change_play_mode_cb(self, button=None, play_mode=None):
+        """ Cycle between game modes """
+        if play_mode is None:
+            self._play_mode += 1
+            if self._play_mode == len(GAME_ICONS):
+                self._play_mode = 0
+        else:
+            self._play_mode = play_mode
+        mode = self._play_mode
+        mode += 1
+        if mode == len(GAME_ICONS):
+            mode = 0
+        self.game_button.set_icon(GAME_ICONS[mode])
+        self.tw.mode = GAME_ICONS[self._play_mode]
+        self.tw.grid.initialize_cards(self.tw.sprites, self.tw.path,
+                                      self.tw.card_dim, self.tw.scale,
+                                      GAME_ICONS[self._play_mode])
+        if self._play_mode > 0:
+            self._play_level = len(LEVEL_ICONS) - 1
+            self.level_button.set_icon(LEVEL_ICONS[self._play_level])
+            self.tw.mask(self._play_level)
+        self.tw.grid.reset(GAME_ICONS[self._play_mode])

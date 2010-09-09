@@ -16,43 +16,78 @@ import gtk
 import gobject
 
 from sprites import Sprite
-from card import Card, load_image
+from card import Card
 
+HEX_TO_GRID = [-1, 0, 1, -1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+               17, 18, 19, 20, 21, 22, -1, 23, 24, -1]
+GRID_TO_HEX = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+               20, 21, 22, 23, 25, 26]
+HEX_ORIENTATION = [-1, 180, 0, -1, 180, 0, 180, 0, 0, 180, 0, 180, 180, 0, 180,
+                    0, 0, 180, 0, 180, 180, 0, 180, 0, -1, 180, 0, -1]
 
 class Grid:
-    """ Class for defining 6x4 matrix of cards """
-    def __init__(self, tw):
-        """ Grid positions """
+    """ Class for defining matrix of cards """
+
+    def __init__(self, tw, shape='rectangle'):
+        """ Set initial grid positions: either a rectangle or a hexgaon """
         self.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                      17, 18, 19, 20, 21, 22, 23]
-        self.card_table = []
         # Stuff to keep around for the graphics
         self.w = int(tw.width)
         self.h = int(tw.height)
         self.d = int(tw.card_dim * tw.scale)
+        self.dx = self.d * 0.85
+        self.dy = self.d * 0.5
         self.s = tw.scale
-        # Initialize the cards
+        self.initialize_cards(tw.sprites, tw.path, tw.card_dim, tw.scale, shape)
+
+    def initialize_cards(self, sprites, path, card_dim, scale, shape):
+        if hasattr(self, 'card_table'):
+            for c in self.card_table:
+                c.spr.hide()
+        self.card_table = []
         for i in self.grid:
-            x, y = self.i_to_xy(i)
-            self.card_table.append(Card(tw, i, x, y))
+            x, y = self.i_to_xy(i, shape)
+            if shape == 'hexagon':
+                self.card_table.append(Card(sprites, path, card_dim, scale, i,
+                                            x, y, 'triangle'))
+                self.card_table[i].set_orientation(
+                    HEX_ORIENTATION[GRID_TO_HEX[i]])
+            else:
+                self.card_table.append(Card(sprites, path, card_dim, scale, i,
+                                            x, y))
 
-    def i_to_xy(self, i):
+    def i_to_xy(self, i, shape='rectangle'):
         """ Convert a grid index to an x, y position """
-        return int((self.w - (self.d * 6)) / 2) + \
-            (i % 6) * self.d - 10 + i % 6 * 4, \
-            int((self.h - (self.d * 4)) / 2) + \
-            int( i / 6) * self.d - 6 + int(i/6)*4
+        if shape == 'hexagon': # 4 x 7 with empty corners
+            return int((self.w - (self.dx * 4)) / 2) + \
+                (GRID_TO_HEX[i] % 4) * self.dx, \
+                int((self.h - (self.dy * 7)) / 2) + \
+                int(GRID_TO_HEX[i] / 4) * self.dy
+        else: # 6 x 4
+            return int((self.w - (self.d * 6)) / 2) + \
+                (i % 6) * self.d - 10 + i % 6 * 4, \
+                int((self.h - (self.d * 4)) / 2) + \
+                int( i / 6) * self.d - 6 + int(i / 6) * 4
 
-    def xy_to_i(self, x, y):
+    def xy_to_i(self, x, y, shape='rectangle'):
         """ Convert an x, y position to a grid index """
-        return (x - int((self.w - (self.d * 6)) / 2)) / self.d + \
-            ((y - int((self.h - (self.d * 4)) / 2)) / self.d) * 6
+        if shape == 'hexagon':
+            return HEX_TO_GRID[(x - int((self.w - (self.d * 6)) / 2)) \
+                                   / self.d + \
+                ((y - int((self.h - (self.d * 4)) / 2)) / self.d) * 6]
+        else:
+            return (x - int((self.w - (self.d * 6)) / 2)) / self.d + \
+                ((y - int((self.h - (self.d * 4)) / 2)) / self.d) * 6
 
-    def set_grid(self, newgrid):
+    def set_grid(self, newgrid, shape='rectangle'):
         """ Move cards to x, y positions specified in grid """
         for i, c in enumerate(newgrid):
-            x, y = self.i_to_xy(i)
+            x, y = self.i_to_xy(i, shape)
             self.card_table[c].spr.move((x, y))
+            if shape == 'hexagon':
+                self.card_table[c].set_orientation(
+                    HEX_ORIENTATION[GRID_TO_HEX[c]])
             self.grid[i] = c
 
     def show_all(self):
@@ -65,16 +100,21 @@ class Grid:
         for i in list:
             self.card_table[i].spr.hide()
 
-    def reset(self):
+    def reset(self, shape='rectangle'):
         """ Reset everything to initial layout """
         self.show_all()
         self.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                      17, 18, 19, 20, 21, 22, 23]
         for i in self.grid:
-            x, y = self.i_to_xy(i)
+            x, y = self.i_to_xy(i, shape)
             self.card_table[i].spr.move((x, y))
+            if shape == 'hexagon':
+                self.card_table[i].set_orientation(
+                    HEX_ORIENTATION[GRID_TO_HEX[i]])
+            else:
+                self.card_table[i].set_orientation(0)
 
-    def swap(self, a, b):
+    def swap(self, a, b, shape='rectangle'):
         """ swap grid elements and x,y positions of sprites """
         ai = self.spr_to_i(a)
         bi = self.spr_to_i(b)
@@ -87,6 +127,12 @@ class Grid:
         bx, by = b.get_xy()
         a.move((bx, by))
         b.move((ax, ay))
+        if shape == 'hexagon':
+            if HEX_ORIENTATION[GRID_TO_HEX[ai]] != \
+                    HEX_ORIENTATION[GRID_TO_HEX[bi]]:
+                print 'rotating 180: ', ai, bi, self.grid[ai], self.grid[bi]
+                self.card_table[self.grid[ai]].rotate_180()
+                self.card_table[self.grid[bi]].rotate_180()
 
     def spr_to_i(self, spr):
         """ Find a card index from a sprite """

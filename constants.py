@@ -24,9 +24,7 @@ C = [[Y, B, Y, R], [R, Y, Y, R], [R, R, Y, R], [R, R, R, R], [B, B, B, Y], [Y, B
 
 H = [[G, B, G], [B, Y, R], [B, R, B], [Y, G, Y], [R, G, B], [G, B, B], [R, B, G], [B, B, B], [R, R, R], [R, R, B], [G, R, R], [Y, R, R], [R, G, Y], [G, G, Y], [G, R, Y], [B, Y, G], [Y, R, Y], [G, G, R], [G, G, G], [B, Y, Y], [R, Y, B], [Y, B, G], [Y, Y, Y], [Y, B, B]]
 
-RT = [[B, B, Y], [Y, B, G], [G, R, B], [Y, G, Y], [R, G, G], [Y, G, B], [B, G, G], [R, B, Y], [R, R, G], [R, Y, G], [B, B, R], [Y, Y, Y]]
-
-LT = [[B, B, G], [R, Y, Y], [G, G, G], [G, Y, G], [G, R, B], [B, Y, Y], [B, B, B], [B, R, R], [Y, R, R], [R, R, R], [R, B, Y], [R, Y, G]]
+RT = [[B, B, Y], [Y, B, G], [G, B, R], [Y, G, Y], [R, G, G], [Y, G, B], [B, G, G], [R, Y, B], [R, R, G], [R, G, Y], [B, B, R], [Y, Y, Y], [B, B, G], [R, Y, Y], [G, G, G], [G, Y, G], [G, R, B], [B, Y, Y], [B, B, B], [B, R, R], [Y, R, R], [R, R, R], [R, B, Y], [R, Y, G]]
 
 MASKS = [[0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 16, 17, 18, 19, 20, 21, 22,
           23], [0, 1, 2, 3, 4, 5, 6, 11, 12, 17, 18, 19, 20, 21, 22, 23], []]
