@@ -45,7 +45,7 @@ SERVICE = 'org.sugarlabs.PukllanapacActivity'
 IFACE = SERVICE
 PATH = '/org/augarlabs/PukllanapacActivity'
 LEVEL_ICONS = ['level1', 'level2', 'level3']
-GAME_ICONS = ['rectangle', 'hexagon']
+GAME_ICONS = ['rectangle', 'hexagon', 'hexagon2']
 
 
 def _button_factory(icon_name, tooltip, callback, toolbar, cb_arg=None,

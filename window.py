@@ -35,6 +35,7 @@ LEVEL_BOUNDS = [[[1, 2], [0, 1], [2, 3], [1, 2]],
                 [[1, 2], [0, 1], [1, 4], [0, 3]], 
                 [[0, 3], [-1, 2], [1, 5], [-1, 4]]]
 
+
 class Game():
     """ The game play -- called from within Sugar or GNOME """
 

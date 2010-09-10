@@ -29,13 +29,16 @@ class Card:
         """ Load a card from a precomputed SVG. """
         self.images = []
         self.orientation = 0
-        self.increment = 90
 
         if shape == 'triangle':
             file = "%s/triangle-r0-%d.svg" % (path, c)
             self.increment = 60
+        elif shape == 'hexagon':
+            file = "%s/hexagon-r0-%d.svg" % (path, c)
+            self.increment = 120
         else:
             file = "%s/card-%d.svg" % (path, c)
+            self.increment = 90
 
         self.images.append(load_image(file, card_dim * scale,
                                       card_dim * scale))
@@ -54,6 +57,13 @@ class Card:
             self.images.append(load_image(file, card_dim * scale,
                                           card_dim * scale))
             file = "%s/triangle-r300-%d.svg" % (path, c)
+            self.images.append(load_image(file, card_dim * scale,
+                                          card_dim * scale))
+        elif shape == 'hexagon':
+            file = "%s/hexagon-r120-%d.svg" % (path, c)
+            self.images.append(load_image(file, card_dim * scale,
+                                          card_dim * scale))
+            file = "%s/hexagon-r240-%d.svg" % (path, c)
             self.images.append(load_image(file, card_dim * scale,
                                           card_dim * scale))
         else:

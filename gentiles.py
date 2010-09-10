@@ -30,7 +30,7 @@ def _svg_header():
     g = '   width="200"\n'
     h = '   height="200"\n'
     i = '   id="svg2">\n'
-    j = '  <g transform="translate(0,-852.36218)">\n'
+    j = '  <g transform="translate(0,-852.4)">\n'
     k = '      <rect\n'
     l = '         width="200"\n'
     m = '         height="200"\n'
@@ -43,8 +43,8 @@ def _svg_header():
 def _svg_circle(x, y):
     """ draw an arc at x, y """
     a = '      <path\n'
-    b = '         d="m 342.85714,826.64789 a 97.14286,88.571426 0 1 1 -194.28572,0 97.14286,88.571426 0 1 1 194.28572,0 z"\n'
-    c = '         transform="matrix(0.76176468,0,0,0.83548389,' + x + ',' + y +')"\n'
+    b = '         d="m 342.9,826.6 a 97.1,88.6 0 1 1 -194.3,0 97.1,88.6 0 1 1 194.3,0 z"\n'
+    c = '         transform="matrix(0.76,0,0,0.84,' + x + ',' + y +')"\n'
     return a + b + c
 
 
@@ -82,7 +82,7 @@ def _svg_footer():
     b = '</svg>\n'
     return a + b
 
-def _svg_hex(top, left, right):
+def _svg_hex(top, left, right, rotate=0):
     """ draw a hexagon """
     a = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n'
     b = '<!-- Created with Python in Emacs -->\n'
@@ -90,18 +90,23 @@ def _svg_hex(top, left, right):
     d = '   xmlns:svg="http://www.w3.org/2000/svg"\n'
     e = '   xmlns="http://www.w3.org/2000/svg"\n'
     f = '   version="1.1"\n'
-    g = '   width="202.28767"\n'
-    h = '   height="231.94138"\n'
+    g = '   width="202."\n'
+    h = '   height="231.9"\n'
     i = '   id="hexagon">\n'
-    j = '  <g transform="translate(-270.9034,-365.15558)">\n'
+    if rotate == 120:
+        j = '  <g transform="matrix(-0.5,-0.87,0.87,-0.5,-129.5,678.7)">\n'
+    elif rotate == 240:
+        j = '  <g transform="matrix(-0.5,0.87,-0.87,-0.5,703.5,34.5)">\n'
+    else:
+        j = '  <g transform="translate(-270.9,-365.2)">\n'
     k = '    <path\n'
-    l = '       d="m 272.04724,423.15558 100.55096,-57.5 99.44904,57.5 -100.55096,57.5 -99.44904,-57.5 z"\n'
+    l = '       d="m 272.0,423.2 100.6,-57.5 99.4,57.5 -100.6,57.5 -99.4,-57.5 z"\n'
     m = '       style="fill:' + top + ';fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />\n'
     n = '    <path\n'
-    o = '       d="m 371.47534,596.59696 -100.07194,-58.32969 0.0719,-114.87539 100.07194,58.32969 -0.0719,114.87539 z"\n'
+    o = '       d="m 371.5,596.6 -100.1,-58.3 0.1,-114.9 100.1,58.3 -0.1,114.9 z"\n'
     p = '       style="fill:' + left + '#0000ff;fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />\n'
     q = '    <path\n'
-    r = '       d="m 372.61914,596.3201 100.07194,-58.32969 -0.0719,-114.87539 -100.07194,58.32969 0.0719,114.87539 z"\n'
+    r = '       d="m 372.6,596.3 100.1,-58.3 -0.1,-114.9 -100.1,58.3 0.1,114.9 z"\n'
     s = '       style="fill:' + right + ';fill-opacity:1;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />\n'
     t = '  </g>\n'
     u = '</svg>\n'
@@ -157,7 +162,7 @@ def open_file(datapath, filename):
 
 
 def generator(datapath):
-    """ Make all of the cards """
+    """ Make the cards: squares with circles, hexagons, and triangles """
     for i, c in enumerate(C):
         f = open_file(datapath, "card-%d.svg" % (i))
         svg = _svg_header()
@@ -170,8 +175,14 @@ def generator(datapath):
         f.close()
 
     for i, c in enumerate(H):
-        f = open_file(datapath, "hex-%d.svg" % (i))
+        f = open_file(datapath, "hexagon-r0-%d.svg" % (i))
         f.write(_svg_hex(c[0], c[1], c[2]))
+        f.close()
+        f = open_file(datapath, "hexagon-r120-%d.svg" % (i))
+        f.write(_svg_hex(c[0], c[1], c[2], 120))
+        f.close()
+        f = open_file(datapath, "hexagon-r240-%d.svg" % (i))
+        f.write(_svg_hex(c[0], c[1], c[2], 240))
         f.close()
 
     for i, c in enumerate(RT):

@@ -24,6 +24,10 @@ GRID_TO_HEX = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
                20, 21, 22, 23, 25, 26]
 HEX_ORIENTATION = [-1, 180, 0, -1, 180, 0, 180, 0, 0, 180, 0, 180, 180, 0, 180,
                     0, 0, 180, 0, 180, 180, 0, 180, 0, -1, 180, 0, -1]
+HEX2_TO_GRID = [-1, 0, 1, 2, 3, -1, 4, 5, 6, 7, 8, -1, 9, 10, 11, 12, 13, 14,
+                 15, 16, 17, 18, 19, -1, -1, 20, 21, 22, 23, -1]
+GRID_TO_HEX2 = [1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                21, 22, 25, 26, 27, 28]
 
 class Grid:
     """ Class for defining matrix of cards """
@@ -38,6 +42,7 @@ class Grid:
         self.d = int(tw.card_dim * tw.scale)
         self.dx = self.d * 0.85
         self.dy = self.d * 0.5
+        self.dy2 = self.d * 0.75
         self.s = tw.scale
         self.initialize_cards(tw.sprites, tw.path, tw.card_dim, tw.scale, shape)
 
@@ -53,6 +58,9 @@ class Grid:
                                             x, y, 'triangle'))
                 self.card_table[i].set_orientation(
                     HEX_ORIENTATION[GRID_TO_HEX[i]])
+            elif shape == 'hexagon2':
+                self.card_table.append(Card(sprites, path, card_dim, scale, i,
+                                            x, y, 'hexagon'))
             else:
                 self.card_table.append(Card(sprites, path, card_dim, scale, i,
                                             x, y))
@@ -64,21 +72,21 @@ class Grid:
                 (GRID_TO_HEX[i] % 4) * self.dx, \
                 int((self.h - (self.dy * 7)) / 2) + \
                 int(GRID_TO_HEX[i] / 4) * self.dy
+        elif shape == 'hexagon2': # 6 x 5 with empty corners
+            if int(GRID_TO_HEX2[i]/6) == 1 or \
+               int(GRID_TO_HEX2[i]/6) == 3:
+                hoffset = self.dx / 2
+            else:
+                hoffset = 0
+            return int((self.w - (self.dx * 6)) / 2) + \
+                (GRID_TO_HEX2[i] % 6) * self.dx + hoffset, \
+                int((self.h - (self.dy2 * 5)) / 2) + \
+                int(GRID_TO_HEX2[i] / 6) * self.dy2
         else: # 6 x 4
             return int((self.w - (self.d * 6)) / 2) + \
                 (i % 6) * self.d - 10 + i % 6 * 4, \
                 int((self.h - (self.d * 4)) / 2) + \
                 int( i / 6) * self.d - 6 + int(i / 6) * 4
-
-    def xy_to_i(self, x, y, shape='rectangle'):
-        """ Convert an x, y position to a grid index """
-        if shape == 'hexagon':
-            return HEX_TO_GRID[(x - int((self.w - (self.d * 6)) / 2)) \
-                                   / self.d + \
-                ((y - int((self.h - (self.d * 4)) / 2)) / self.d) * 6]
-        else:
-            return (x - int((self.w - (self.d * 6)) / 2)) / self.d + \
-                ((y - int((self.h - (self.d * 4)) / 2)) / self.d) * 6
 
     def restore_grid(self, grid, shape='rectangle'):
         """ Move cards to x, y positions specified in grid """
