@@ -1,4 +1,4 @@
-#Copyright (c) 2010 Walter Bender
+#Copyright (c) 2010,11 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -130,8 +130,19 @@ class Game():
         k = gtk.gdk.keyval_name(event.keyval)
 
     def _expose_cb(self, win, event):
-        self.sprites.refresh(event)
+        ''' Callback to handle window expose events '''
+        self.do_expose_event(event)
         return True
+
+    def do_expose_event(self, event):
+        ''' Handle the expose-event by drawing '''
+        # Restrict Cairo to the exposed area
+        cr = self.canvas.window.cairo_create()
+        cr.rectangle(event.area.x, event.area.y,
+                event.area.width, event.area.height)
+        cr.clip()
+        # Refresh sprite list
+        self.sprites.redraw_sprites(cr=cr)
 
     def _destroy_cb(self, win, event):
         gtk.main_quit()

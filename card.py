@@ -1,4 +1,4 @@
-#Copyright (c) 2010 Walter Bender
+#Copyright (c) 2010, 2011 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -72,7 +72,6 @@ class Card:
 
         # create sprite from svg file
         self.spr = Sprite(sprites, x, y, self.images[0])
-        self.spr.draw()
 
     def reset_image(self, tw):
         """ Reset image to orientation 0. """
@@ -98,5 +97,4 @@ class Card:
         self.orientation += self.increment
         if self.orientation == 360:
             self.orientation = 0
-        self.spr.images[0] = self.images[int(self.orientation/self.increment)]
-        self.spr.draw()
+        self.spr.set_shape(self.images[int(self.orientation/self.increment)])

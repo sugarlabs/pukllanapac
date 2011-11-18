@@ -1,4 +1,4 @@
-#Copyright (c) 2010 Walter Bender
+#Copyright (c) 2010, 2011 Walter Bender
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from sprites import Sprite
 from card import Card
 
 HEX_TO_GRID = [-1, 0, 1, -1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
@@ -32,19 +31,20 @@ GRID_TO_HEX2 = [1, 2, 3, 4, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 class Grid:
     """ Class for defining matrix of cards """
 
-    def __init__(self, tw, shape='rectangle'):
+    def __init__(self, win, shape='rectangle'):
         """ Set initial grid positions: either a rectangle or a hexgaon """
         self.grid = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
                      17, 18, 19, 20, 21, 22, 23]
         # Stuff to keep around for the graphics
-        self.w = int(tw.width)
-        self.h = int(tw.height)
-        self.d = int(tw.card_dim * tw.scale)
+        self.w = int(win.width)
+        self.h = int(win.height)
+        self.d = int(win.card_dim * win.scale)
         self.dx = self.d * 0.85
         self.dy = self.d * 0.5
         self.dy2 = self.d * 0.75
-        self.s = tw.scale
-        self.initialize_cards(tw.sprites, tw.path, tw.card_dim, tw.scale, shape)
+        self.s = win.scale
+        self.initialize_cards(win.sprites, win.path, win.card_dim, win.scale,
+                              shape)
 
     def initialize_cards(self, sprites, path, card_dim, scale, shape):
         if hasattr(self, 'card_table'):
