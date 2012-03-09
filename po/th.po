@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 10:21-0400\n"
-"PO-Revision-Date: 2012-02-27 08:26+0200\n"
-"Last-Translator: sit_oshia <tnasrito@hotmail.com>\n"
+"PO-Revision-Date: 2012-03-09 11:31+0200\n"
+"Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -19,15 +19,15 @@ msgstr ""
 
 #: activity/activity.info:2
 msgid "Pukllanapac"
-msgstr "พลักกลานาปัก"
+msgstr "Pukllanapac"
 
 #: PukllanapacActivity.py:162
 msgid "Game"
-msgstr "เกมส์"
+msgstr "เกม"
 
 #: PukllanapacActivity.py:169
 msgid "Set difficulty level."
-msgstr "เปลี่ยนแปลงระดับความยาก"
+msgstr "ตั้งค่าระดับความยาก"
 
 #: PukllanapacActivity.py:176
 msgid "Select game."
