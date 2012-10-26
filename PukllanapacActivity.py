@@ -1,4 +1,5 @@
 #Copyright (c) 2010 Walter Bender
+#Copyright (c) 2012 Ignacio Rodriguez
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -9,27 +10,19 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, 51 Franklin Street, Suite 500 Boston, MA
 # 02110-1335 USA
-
+from gi.repository import GObject, Gtk, Gdk
 import pygtk
 pygtk.require('2.0')
-import gtk
-import gobject
 
-import sugar
-from sugar.activity import activity
-try:
-    from sugar.graphics.toolbarbox import ToolbarBox
-    _have_toolbox = True
-except ImportError:
-    _have_toolbox = False
+import sugar3
+from sugar3.activity import activity
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.activity.widgets import StopButton
+from sugar3.graphics.toolbarbox import ToolbarButton
 
-if _have_toolbox:
-    from sugar.bundle.activitybundle import ActivityBundle
-    from sugar.activity.widgets import ActivityToolbarButton
-    from sugar.activity.widgets import StopButton
-    from sugar.graphics.toolbarbox import ToolbarButton
-
-from sugar.datastore import datastore
+from sugar3.datastore import datastore
 
 from gettext import gettext as _
 import locale
@@ -55,12 +48,12 @@ class PukllanapacActivity(activity.Activity):
 
         self._play_level = 0
         self._play_mode = 0
-        self._setup_toolbars(_have_toolbox)
+        self._setup_toolbars()
 
         # Create a canvas
-        canvas = gtk.DrawingArea()
-        canvas.set_size_request(gtk.gdk.screen_width(), \
-                                gtk.gdk.screen_height())
+        canvas = Gtk.DrawingArea()
+        canvas.set_size_request(Gdk.Screen.width(), \
+                                Gdk.Screen.height())
         self.set_canvas(canvas)
         canvas.show()
         self.show_all()
@@ -95,31 +88,19 @@ class PukllanapacActivity(activity.Activity):
             self.metadata['rotate' + str(i)] = str(
                 self.win.grid.card_table[self.win.grid.grid[i]].orientation)
 
-    def _setup_toolbars(self, have_toolbox):
+    def _setup_toolbars(self):
         """ Setup the toolbars.. """
 
-        if have_toolbox:
-            toolbox = ToolbarBox()
+	toolbox = ToolbarBox()
 
-            # Activity toolbar
-            activity_button = ActivityToolbarButton(self)
+        # Activity toolbar
+        activity_button = ActivityToolbarButton(self)
 
-            toolbox.toolbar.insert(activity_button, 0)
-            activity_button.show()
-
-            self.set_toolbar_box(toolbox)
-            toolbox.show()
-            toolbar = toolbox.toolbar
-
-        else:
-            # Use pre-0.86 toolbar design
-            games_toolbar = gtk.Toolbar()
-            toolbox = activity.ActivityToolbox(self)
-            self.set_toolbox(toolbox)
-            toolbox.add_toolbar(_('Game'), games_toolbar)
-            toolbox.show()
-            toolbox.set_current_toolbar(1)
-            toolbar = games_toolbar
+        toolbox.toolbar.insert(activity_button, 0)
+        activity_button.show()
+        self.set_toolbar_box(toolbox)
+        toolbox.show()
+        toolbar = toolbox.toolbar
 
         # Add the buttons and labels to the toolbars
         self.level_button = button_factory(
@@ -144,13 +125,12 @@ class PukllanapacActivity(activity.Activity):
         separator_factory(toolbar, False, True)
         self.status_label = label_factory(toolbar, _("drag to swap"))
 
-        if _have_toolbox:
-            separator_factory(toolbox.toolbar, True, False)
+        separator_factory(toolbox.toolbar, True, False)
 
-            stop_button = StopButton(self)
-            stop_button.props.accelerator = '<Ctrl>q'
-            toolbox.toolbar.insert(stop_button, -1)
-            stop_button.show()
+        stop_button = StopButton(self)
+        stop_button.props.accelerator = '<Ctrl>q'
+        toolbox.toolbar.insert(stop_button, -1)
+        stop_button.show()
 
     def change_play_level_cb(self, button=None, play_level=None):
         """ Cycle between levels """
@@ -162,7 +142,7 @@ class PukllanapacActivity(activity.Activity):
                 self._play_level = 0
         else:
             self._play_level = play_level
-        self.level_button.set_icon(LEVEL_ICONS[self._play_level])
+        self.level_button.set_icon_name(LEVEL_ICONS[self._play_level])
         self.win.grid.reset(GAME_ICONS[self._play_mode])
         self.win.mask(self._play_level)
 
@@ -185,6 +165,6 @@ class PukllanapacActivity(activity.Activity):
                                           GAME_ICONS[self._play_mode])
             if self._play_mode > 0:
                 self._play_level = len(LEVEL_ICONS) - 1
-                self.level_button.set_icon(LEVEL_ICONS[self._play_level])
+                self.level_button.set_icon_name(LEVEL_ICONS[self._play_level])
                 self.win.mask(self._play_level)
             self.win.grid.reset(GAME_ICONS[self._play_mode])

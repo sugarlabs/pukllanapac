@@ -1,4 +1,5 @@
 #Copyright (c) 2010, 2011 Walter Bender
+#Copyright (c) 2012 Ignacio Rodriguez
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -9,11 +10,9 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, 51 Franklin Street, Suite 500 Boston, MA
 # 02110-1335 USA
-
+from gi.repository import GObject, Gtk, Gdk
 import pygtk
 pygtk.require('2.0')
-import gtk
-import gobject
 
 from card import Card
 
