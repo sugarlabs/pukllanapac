@@ -103,29 +103,34 @@ class PukllanapacActivity(activity.Activity):
         toolbar = toolbox.toolbar
 
         # Add the buttons and labels to the toolbars
-        self.level_button = button_factory(
-            LEVEL_ICONS[self._play_level], toolbar, self.change_play_level_cb,
-            tooltip=_('Set difficulty level.'))
         mode = self._play_mode
         mode += 1
         if mode == len(GAME_ICONS):
             mode = 0
         self.game_buttons = []
+        group = None
         for i in range(len(GAME_ICONS)):
-            if i==0:
-                self.game_buttons.append(radio_factory(
-                        GAME_ICONS[0], toolbar, self.change_play_mode_cb,
-                        cb_arg=0, tooltip=_('Select game.'), group=None))
-            else:
-                self.game_buttons.append(radio_factory(
-                        GAME_ICONS[i], toolbar, self.change_play_mode_cb,
-                        cb_arg=i, tooltip=_('Select game.'),
-                        group=self.game_buttons[0]))
+            self.game_buttons.append(radio_factory(GAME_ICONS[i],
+                                                   toolbar,
+                                                   self.change_play_mode_cb,
+                                                   cb_arg=i,
+                                                   tooltip=_('Select game.'),
+                                                   group=group))
+            group = self.game_buttons[0]
         self.game_buttons[mode].set_active(True)
-        separator_factory(toolbar, False, True)
-        self.status_label = label_factory(toolbar, _("drag to swap"))
 
-        separator_factory(toolbox.toolbar, True, False)
+        separator_factory(toolbar, expand=False, visible=True)
+
+        self.level_button = button_factory(LEVEL_ICONS[self._play_level],
+                                           toolbar,
+                                           self.change_play_level_cb,
+                                           tooltip=_('Set difficulty level.'))
+
+        self.status_label = label_factory(toolbar,
+                                          _("drag to swap"),
+                                          width=200)
+
+        separator_factory(toolbox.toolbar, expand=True, visible=False)
 
         stop_button = StopButton(self)
         stop_button.props.accelerator = '<Ctrl>q'
@@ -142,7 +147,7 @@ class PukllanapacActivity(activity.Activity):
                 self._play_level = 0
         else:
             self._play_level = play_level
-        self.level_button.set_icon_name(LEVEL_ICONS[self._play_level])
+        self.level_button.set_icon(LEVEL_ICONS[self._play_level])
         self.win.grid.reset(GAME_ICONS[self._play_mode])
         self.win.mask(self._play_level)
 
@@ -163,8 +168,9 @@ class PukllanapacActivity(activity.Activity):
             self.win.grid.initialize_cards(self.win.sprites, self.win.path,
                                           self.win.card_dim, self.win.scale,
                                           GAME_ICONS[self._play_mode])
+            # Only one level (difficult) for modes > 0
             if self._play_mode > 0:
                 self._play_level = len(LEVEL_ICONS) - 1
-                self.level_button.set_icon_name(LEVEL_ICONS[self._play_level])
+                self.level_button.set_icon(LEVEL_ICONS[self._play_level])
                 self.win.mask(self._play_level)
             self.win.grid.reset(GAME_ICONS[self._play_mode])
