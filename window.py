@@ -116,7 +116,7 @@ class Game():
         self.release = None
         if self.test() == True:
             if self.level < 2:
-                gobject.timeout_add(3000, self.activity.change_play_level_cb,
+                GObject.timeout_add(3000, self.activity.change_play_level_cb,
                                     None)
         return True
 
