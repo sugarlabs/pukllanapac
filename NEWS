@@ -1,41 +1,46 @@
+9
+
+ENHANCEMENT:
+* New translations
+
 8
 
-ENHANCEMENTS
+ENHANCEMENTS:
 * Switch to radio buttons for game modes
 * Update to Cairo graphics
 
 7
 
-ENHANCEMENTS
+ENHANCEMENTS:
 * New translations
 
-BUG FIX
+BUG FIX:
 * Proper address for FSF
 
 6
 
-BUG FIX
+BUG FIX:
 * Fixed COPYING
 
 5
 
-ENHANCEMENTS
+ENHANCEMENTS:
 * Added hexagon game
 
 4
 
-ENHANCEMENTS
+ENHANCEMENTS:
 * Added triangle game
 * Rotate on click
 
 3
 
-ENHANCEMENTS
+ENHANCEMENT:
 * Added tile rotation
 
 2
 
-ENHANCEMENTS
+ENHANCEMENTS:
 * Saves/restores to Journal
 * Multiple play levels
 * Auto-advances to next level
