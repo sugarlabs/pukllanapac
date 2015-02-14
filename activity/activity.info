@@ -6,3 +6,4 @@ bundle_id = org.sugarlabs.PukllanapacActivity
 exec = sugar-activity PukllanapacActivity.PukllanapacActivity
 icon = activity-pukllanapac
 show_launcher = yes
+category = game
