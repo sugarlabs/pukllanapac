@@ -7,3 +7,4 @@ exec = sugar-activity PukllanapacActivity.PukllanapacActivity
 icon = activity-pukllanapac
 show_launcher = yes
 category = game
+repository = https://github.com/walterbender/pukllanapac
