@@ -10,16 +10,14 @@
 # Free Software Foundation, 51 Franklin Street, Suite 500 Boston, MA
 # 02110-1335 USA
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+from gi.repository.GdkPixbuf import Pixbuf
 
 from sprites import Sprite
 
 
 def load_image(file, w, h):
     """ Convert from file to pixbuf at size w, h """
-    return gtk.gdk.pixbuf_new_from_file_at_size(file, int(w), int(h))
+    return Pixbuf.new_from_file_at_size(file, int(w), int(h))
 
 
 class Card:

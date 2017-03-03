@@ -10,26 +10,27 @@
 # Free Software Foundation, 51 Franklin Street, Suite 500 Boston, MA
 # 02110-1335 USA
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
 import gobject
 
-import sugar
-from sugar.activity import activity
+import sugar3
+from sugar3.activity import activity
 try:
-    from sugar.graphics.toolbarbox import ToolbarBox
+    from sugar3.graphics.toolbarbox import ToolbarBox
     _have_toolbox = True
 except ImportError:
     _have_toolbox = False
 
 if _have_toolbox:
-    from sugar.bundle.activitybundle import ActivityBundle
-    from sugar.activity.widgets import ActivityToolbarButton
-    from sugar.activity.widgets import StopButton
-    from sugar.graphics.toolbarbox import ToolbarButton
+    from sugar3.bundle.activitybundle import ActivityBundle
+    from sugar3.activity.widgets import ActivityToolbarButton
+    from sugar3.activity.widgets import StopButton
+    from sugar3.graphics.toolbarbox import ToolbarButton
 
-from sugar.datastore import datastore
+from sugar3.datastore import datastore
 
 from gettext import gettext as _
 import locale
@@ -58,9 +59,9 @@ class PukllanapacActivity(activity.Activity):
         self._setup_toolbars(_have_toolbox)
 
         # Create a canvas
-        canvas = gtk.DrawingArea()
-        canvas.set_size_request(gtk.gdk.screen_width(), \
-                                gtk.gdk.screen_height())
+        canvas = Gtk.DrawingArea()
+        canvas.set_size_request(Gdk.Screen.width(), \
+                                Gdk.Screen.height())
         self.set_canvas(canvas)
         canvas.show()
         self.show_all()
@@ -113,7 +114,7 @@ class PukllanapacActivity(activity.Activity):
 
         else:
             # Use pre-0.86 toolbar design
-            games_toolbar = gtk.Toolbar()
+            games_toolbar = Gtk.Toolbar()
             toolbox = activity.ActivityToolbox(self)
             self.set_toolbox(toolbox)
             toolbox.add_toolbar(_('Game'), games_toolbar)
@@ -142,7 +143,7 @@ class PukllanapacActivity(activity.Activity):
                         group=self.game_buttons[0]))
         self.game_buttons[mode].set_active(True)
         separator_factory(toolbar, False, True)
-        self.status_label = label_factory(toolbar, _("drag to swap"))
+        self.status_label = label_factory(toolbar, _("drag to swap"), width=85)
 
         if _have_toolbox:
             separator_factory(toolbox.toolbar, True, False)
@@ -162,7 +163,7 @@ class PukllanapacActivity(activity.Activity):
                 self._play_level = 0
         else:
             self._play_level = play_level
-        self.level_button.set_icon(LEVEL_ICONS[self._play_level])
+        self.level_button.set_icon_name(LEVEL_ICONS[self._play_level])
         self.win.grid.reset(GAME_ICONS[self._play_mode])
         self.win.mask(self._play_level)
 
@@ -185,6 +186,6 @@ class PukllanapacActivity(activity.Activity):
                                           GAME_ICONS[self._play_mode])
             if self._play_mode > 0:
                 self._play_level = len(LEVEL_ICONS) - 1
-                self.level_button.set_icon(LEVEL_ICONS[self._play_level])
+                self.level_button.set_icon_name(LEVEL_ICONS[self._play_level])
                 self.win.mask(self._play_level)
             self.win.grid.reset(GAME_ICONS[self._play_mode])

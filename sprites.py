@@ -24,7 +24,7 @@
 '''
 
 sprites.py is a simple sprites library for managing graphics objects,
-'sprites', on a gtk.DrawingArea. It manages multiple sprites with
+'sprites', on a Gtk.DrawingArea. It manages multiple sprites with
 methods such as move, hide, set_layer, etc.
 
 There are two classes:
@@ -66,9 +66,9 @@ Example usage:
         # In your activity's do_expose_event, put in a call to redraw_sprites
         self.sprites.redraw_sprites(event.area, cairo_context)
 
-# method for converting SVG to a gtk pixbuf
+# method for converting SVG to a Gdk Pixbuf
 def svg_str_to_pixbuf(svg_string):
-    pl = gtk.gdk.PixbufLoader('svg')
+    pl = Gdk.PixbufLoader('svg')
     pl.write(svg_string)
     pl.close()
     pixbuf = pl.get_pixbuf()
@@ -76,11 +76,12 @@ def svg_str_to_pixbuf(svg_string):
 
 '''
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import pango
-import pangocairo
+import gi
+gi.require_version('PangoCairo', '1.0')
+from gi.repository import Gdk
+from gi.repository.GdkPixbuf import Pixbuf
+from gi.repository import Pango
+from gi.repository import PangoCairo
 import cairo
 
 class Sprites:
@@ -160,7 +161,11 @@ class Sprite:
         ''' Initialize an individual sprite '''
         self._sprites = sprites
         self.save_xy = (x, y)  # remember initial (x, y) position
-        self.rect = gtk.gdk.Rectangle(int(x), int(y), 0, 0)
+        self.rect = Gdk.Rectangle()
+        self.rect.x = int(x)
+        self.rect.y = int(y)
+        self.width = 0
+        self.height = 0
         self._scale = [12]
         self._rescale = [True]
         self._horiz_align = ["center"]
@@ -187,7 +192,7 @@ class Sprite:
             self._dy.append(0)
         self._dx[i] = dx
         self._dy[i] = dy
-        if isinstance(image, gtk.gdk.Pixbuf):
+        if isinstance(image, Pixbuf):
             w = image.get_width()
             h = image.get_height()
         else:
@@ -203,8 +208,7 @@ class Sprite:
         surface = cairo.ImageSurface(
             cairo.FORMAT_ARGB32, self.rect.width, self.rect.height)
         context = cairo.Context(surface)
-        context = gtk.gdk.CairoContext(context)
-        context.set_source_pixbuf(image, 0, 0)
+        Gdk.cairo_set_source_pixbuf(context, image, 0, 0)
         context.rectangle(0, 0, self.rect.width, self.rect.height)
         context.fill()
         self.cached_surfaces[i] = surface
@@ -257,7 +261,7 @@ class Sprite:
         ''' Set the label drawn on the sprite '''
         self._extend_labels_array(i)
         if type(new_label) is str or type(new_label) is unicode:
-            # pango doesn't like nulls
+            # Pango doesn't like nulls
             self.labels[i] = new_label.replace("\0", " ")
         else:
             self.labels[i] = str(new_label)
@@ -282,7 +286,7 @@ class Sprite:
 
     def set_font(self, font):
         ''' Set the font for a label '''
-        self._fd = pango.FontDescription(font)
+        self._fd = Pango.FontDescription(font)
 
     def set_label_color(self, rgb):
         ''' Set the font color for a label '''
@@ -356,8 +360,8 @@ class Sprite:
 
     def draw_label(self, cr):
         ''' Draw the label based on its attributes '''
-        # Create a pangocairo context
-        cr = pangocairo.CairoContext(cr)
+        # Create a PangoCairo context
+        cr = PangoCairo.CairoContext(cr)
         my_width = self.rect.width - self._margins[0] - self._margins[2]
         if my_width < 0:
             my_width = 0
@@ -365,23 +369,23 @@ class Sprite:
         for i in range(len(self.labels)):
             pl = cr.create_layout()
             pl.set_text(str(self.labels[i]))
-            self._fd.set_size(int(self._scale[i] * pango.SCALE))
+            self._fd.set_size(int(self._scale[i] * Pango.SCALE))
             pl.set_font_description(self._fd)
-            w = pl.get_size()[0] / pango.SCALE
+            w = pl.get_size()[0] / Pango.SCALE
             if w > my_width:
                 if self._rescale[i]:
                     self._fd.set_size(
-                            int(self._scale[i] * pango.SCALE * my_width / w))
+                            int(self._scale[i] * Pango.SCALE * my_width / w))
                     pl.set_font_description(self._fd)
-                    w = pl.get_size()[0] / pango.SCALE
+                    w = pl.get_size()[0] / Pango.SCALE
                 else:
                     j = len(self.labels[i]) - 1
                     while(w > my_width and j > 0):
                         pl.set_text(
                             "…" + self.labels[i][len(self.labels[i]) - j:])
-                        self._fd.set_size(int(self._scale[i] * pango.SCALE))
+                        self._fd.set_size(int(self._scale[i] * Pango.SCALE))
                         pl.set_font_description(self._fd)
-                        w = pl.get_size()[0] / pango.SCALE
+                        w = pl.get_size()[0] / Pango.SCALE
                         j -= 1
             if self._horiz_align[i] == "center":
                 x = int(self.rect.x + self._margins[0] + (my_width - w) / 2)
@@ -389,7 +393,7 @@ class Sprite:
                 x = int(self.rect.x + self._margins[0])
             else: # right
                 x = int(self.rect.x + self.rect.width - w - self._margins[2])
-            h = pl.get_size()[1] / pango.SCALE
+            h = pl.get_size()[1] / Pango.SCALE
             if self._vert_align[i] == "middle":
                 y = int(self.rect.y + self._margins[1] + (my_height - h) / 2)
             elif self._vert_align[i] == "top":
@@ -405,15 +409,15 @@ class Sprite:
 
     def label_width(self):
         ''' Calculate the width of a label '''
-        cr = pangocairo.CairoContext(self._sprites.cr)
+        cr = PangoCairo.CairoContext(self._sprites.cr)
         if cr is not None:
             max = 0
             for i in range(len(self.labels)):
                 pl = cr.create_layout()
                 pl.set_text(self.labels[i])
-                self._fd.set_size(int(self._scale[i] * pango.SCALE))
+                self._fd.set_size(int(self._scale[i] * Pango.SCALE))
                 pl.set_font_description(self._fd)
-                w = pl.get_size()[0] / pango.SCALE
+                w = pl.get_size()[0] / Pango.SCALE
                 if w > max:
                     max = w
             return max

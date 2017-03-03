@@ -10,9 +10,6 @@
 # Free Software Foundation, 51 Franklin Street, Suite 500 Boston, MA
 # 02110-1335 USA
 
-import pygtk
-pygtk.require('2.0')
-import gtk
 import gobject
 
 from card import Card
