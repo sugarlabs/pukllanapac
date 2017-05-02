@@ -1,10 +1,10 @@
 [Activity]
 name = Pukllanapac
-activity_version = 12
+activity_version = 13
 license = GPLv3
 bundle_id = org.sugarlabs.PukllanapacActivity
 exec = sugar-activity PukllanapacActivity.PukllanapacActivity
 icon = activity-pukllanapac
 show_launcher = yes
 category = game
-repository = https://github.com/walterbender/pukllanapac
+repository = https://github.com/sugarlabs/pukllanapac
