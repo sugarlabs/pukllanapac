@@ -1,10 +1,12 @@
 [Activity]
 name = Pukllanapac
 activity_version = 13
-license = GPLv3
+license = GPLv3+;MIT
 bundle_id = org.sugarlabs.PukllanapacActivity
 exec = sugar-activity PukllanapacActivity.PukllanapacActivity
 icon = activity-pukllanapac
 show_launcher = yes
-category = game
+tags = Game; Maths
 repository = https://github.com/sugarlabs/pukllanapac
+summary = A sliding-puzzle game with objective to rearrange tiles so sectors become of the same color.
+url = https://help.sugarlabs.org/en/pukllanapac.html
