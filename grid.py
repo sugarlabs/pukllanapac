@@ -132,7 +132,7 @@ class Grid:
         if shape == 'hexagon':
             if HEX_ORIENTATION[GRID_TO_HEX[ai]] != \
                     HEX_ORIENTATION[GRID_TO_HEX[bi]]:
-                print 'rotating 180: ', ai, bi, self.grid[ai], self.grid[bi]
+                print('rotating 180: ', ai, bi, self.grid[ai], self.grid[bi])
                 self.card_table[self.grid[ai]].rotate_180()
                 self.card_table[self.grid[bi]].rotate_180()
 
