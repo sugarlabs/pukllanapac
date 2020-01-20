@@ -48,7 +48,7 @@ class Grid:
             for c in self.card_table:
                 c.spr.hide()
         self.card_table = []
-        for i in self.grid:
+        for i in range(0,24):
             x, y = self.i_to_xy(i, shape)
             if shape == 'hexagon':
                 self.card_table.append(Card(sprites, path, card_dim, scale, i,
