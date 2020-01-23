@@ -6,11 +6,10 @@ Pukllanapac is a sliding-puzzle game; the objective is to rearrange tiles so tha
 How to use?
 ===========
 
-Pukllanapac is part of the Sugar desktop.  Please refer to;
+Pukllanapac is not a part of the Sugar desktop.  Please refer to;
 
 * [How to Get Sugar on sugarlabs.org](https://sugarlabs.org/),
-* [How to use Sugar](https://help.sugarlabs.org/),
-* [How to use Pukllanapac](https://help.sugarlabs.org/pukllanapac.html)
+* [How to use Sugar](https://help.sugarlabs.org/).
 
 How to upgrade?
 ===============

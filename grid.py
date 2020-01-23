@@ -10,7 +10,7 @@
 # Free Software Foundation, 51 Franklin Street, Suite 500 Boston, MA
 # 02110-1335 USA
 
-import gobject
+from gi.repository import GObject
 
 from card import Card
 
