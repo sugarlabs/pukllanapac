@@ -84,7 +84,7 @@ class Card:
 
     def rotate_180(self):
         """ Rotate a tile 180 degrees """
-        print "rotate 180"
+        print("rotate 180")
         r = 0
         while r < 180:
             self.rotate_ccw()

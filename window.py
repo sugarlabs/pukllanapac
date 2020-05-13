@@ -83,7 +83,7 @@ class Game():
 
     def _button_press_cb(self, win, event):
         win.grab_focus()
-        x, y = map(int, event.get_coords())
+        x, y = list(map(int, event.get_coords()))
         self.start_drag = [x, y]
         spr = self.sprites.find_sprite((x, y))
         if spr is None:
@@ -96,7 +96,7 @@ class Game():
 
     def _button_release_cb(self, win, event):
         win.grab_focus()
-        x, y = map(int, event.get_coords())
+        x, y = list(map(int, event.get_coords()))
         spr = self.sprites.find_sprite((x, y))
         if spr is None:
             self.press = None
