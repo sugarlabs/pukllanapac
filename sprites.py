@@ -143,7 +143,7 @@ class Sprites:
         else:
             self.cr = cr
         if cr is None:
-            print 'sprites.redraw_sprites: no Cairo context'
+            print('sprites.redraw_sprites: no Cairo context')
             return
         for spr in self.list:
             if area == None:
@@ -331,7 +331,7 @@ class Sprite:
     def draw(self, cr=None):
         ''' Draw the sprite (and label) '''
         if cr is None:
-            print 'sprite.draw: no Cairo context.'
+            print('sprite.draw: no Cairo context.')
             return
         for i, surface in enumerate(self.cached_surfaces):
             cr.set_source_surface(surface,
