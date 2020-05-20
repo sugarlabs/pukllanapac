@@ -12,7 +12,7 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
+from gi.repository import GLib
 from math import sqrt
 
 from gettext import gettext as _
@@ -119,7 +119,7 @@ class Game():
         self.release = None
         if self.test() == True:
             if self.level < 2:
-                GObject.timeout_add(3000, self.activity.change_play_level_cb,
+                GLib.timeout_add(3000, self.activity.change_play_level_cb,
                                     None)
         return True
 
