@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-03 10:21-0400\n"
+"POT-Creation-Date: 2020-06-21 11:55+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,18 +21,24 @@ msgstr ""
 msgid "Pukllanapac"
 msgstr ""
 
-#: PukllanapacActivity.py:162
+#: activity/activity.info:3
+msgid ""
+"A sliding-puzzle game with objective to rearrange tiles so sectors become of "
+"the same color."
+msgstr ""
+
+#: PukllanapacActivity.py:120
 msgid "Game"
 msgstr ""
 
-#: PukllanapacActivity.py:169
+#: PukllanapacActivity.py:128
 msgid "Set difficulty level."
 msgstr ""
 
-#: PukllanapacActivity.py:176
+#: PukllanapacActivity.py:138 PukllanapacActivity.py:142
 msgid "Select game."
 msgstr ""
 
-#: PukllanapacActivity.py:179
+#: PukllanapacActivity.py:146
 msgid "drag to swap"
 msgstr ""
