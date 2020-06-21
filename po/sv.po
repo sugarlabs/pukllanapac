@@ -2,20 +2,22 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-08-03 10:21-0400\n"
-"PO-Revision-Date: 2012-01-23 20:55+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2017-03-27 20:40+0000\n"
+"Last-Translator: Anders <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: en\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490647220.000000\n"
 
 #: activity/activity.info:2
 msgid "Pukllanapac"
@@ -23,16 +25,16 @@ msgstr "Pukllanapac"
 
 #: PukllanapacActivity.py:162
 msgid "Game"
-msgstr "Game"
+msgstr "Spel"
 
 #: PukllanapacActivity.py:169
 msgid "Set difficulty level."
-msgstr "Set difficulty level."
+msgstr "Ställ in svårighetsnivå."
 
 #: PukllanapacActivity.py:176
 msgid "Select game."
-msgstr "Select game."
+msgstr "Välj spel."
 
 #: PukllanapacActivity.py:179
 msgid "drag to swap"
-msgstr "drag to swap"
+msgstr "dra för att växla plats"
