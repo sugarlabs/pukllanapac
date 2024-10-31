@@ -8,36 +8,41 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-21 11:55+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-11-01 05:26+0000\n"
+"Last-Translator: NF <rkavt@smartprojects.ge>\n"
+"Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
+"sugar-activities/pukllanapac/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.4.2\n"
 
 #: activity/activity.info:2
 msgid "Pukllanapac"
-msgstr ""
+msgstr "Pukllanapac"
 
 #: activity/activity.info:3
 msgid ""
 "A sliding-puzzle game with objective to rearrange tiles so sectors become of "
 "the same color."
 msgstr ""
+"პაზლი დანიშნულებით, რომ გადაალაგოთ ფილები ისე, რომ სექტორები იგივე ფერის "
+"გახდეს."
 
 #: PukllanapacActivity.py:120
 msgid "Game"
-msgstr ""
+msgstr "თამაში"
 
 #: PukllanapacActivity.py:128
 msgid "Set difficulty level."
-msgstr ""
+msgstr "სირთულის დონის დაყენება."
 
 #: PukllanapacActivity.py:138 PukllanapacActivity.py:142
 msgid "Select game."
-msgstr ""
+msgstr "აირჩიეთ თამაში."
 
 #: PukllanapacActivity.py:146
 msgid "drag to swap"
-msgstr ""
+msgstr "გადაათრიეთ გასაცვლელად"
